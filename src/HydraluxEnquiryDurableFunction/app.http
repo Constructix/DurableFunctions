@@ -1,0 +1,19 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+@prefix=http
+@hostname=http://localhost
+@port=7014
+@baseUrl={{hostname}}:{{port}}
+
+###
+POST {{baseUrl}}/api/Function1_HttpStart
+content-type: application/json
+{
+  "Name": "Richard Jones",
+  "Phone":"0437291575",
+  "Email":"rjjones79@hotmail.com",
+  "ServiceRequired":"Driveway Clean",
+  "Message": "This a test message."
+}
+
+
+
