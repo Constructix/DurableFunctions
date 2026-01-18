@@ -39,9 +39,10 @@ C --> D[Activity: SendNewEnquiryToHydralux]
 D --> E[Activity: SendReceivedEnquiryToCustomer]
 
 E --> F[Return: OK]
+``` 
 
 # 🧭 **Diagram of the Enquiry Workflow**
-``` 
+
 ```mermaid
 sequenceDiagram
     autonumber
