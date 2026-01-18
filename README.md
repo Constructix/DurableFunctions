@@ -1,36 +1,62 @@
-# DurableFunctions
-Durable functions
+﻿# Hydralux Enquiry Durable Function
 
-### Overview
-This repository contains examples and templates for building durable functions using C# .
+A cloud‑native, event‑driven workflow built using **Azure Durable Functions (Isolated Worker)**.  
+This workflow processes customer enquiries end‑to‑end:
 
-Durable functions are an extension of Azure Functions that enable you to write stateful functions in a serverless environment. They allow you to define workflows using code, manage state, and handle long-running processes.
-### Features
-- Orchestrator Functions: Define workflows that can call other functions, wait for external events, and manage state.
-- Activity Functions: Implement the individual tasks that make up the workflow.
-- Durable Entities: Create stateful objects that can maintain state across function invocations.
-- Timers and Delays: Schedule tasks to run at specific times or after certain delays.
-- Error Handling: Built-in support for retry policies and error handling in workflows.
+1. Accept enquiry from the website
+2. Persist the enquiry to PostgreSQL
+3. Notify HydraLux internally
+4. Send confirmation to the customer
 
-Recommended Project Structure: 
+The architecture is designed for reliability, observability, and future expansion into additional workflows such as bookings and quote requests.
 
-/HydraluxEnquiryDurableFunction
-    /Orchestrators
-        EnquiryOrchestrator.cs
-    /Activities
-        SaveEnquiryToDatabase.cs
-        SendNewEnquiryToHydralux.cs
-        SendReceivedEnquiryToCustomer.cs
-    /Triggers
-        EnquiryHttpStart.cs
-    /Models
-        EnquiryRequest.cs
-        Enquiry.cs
-    /Services
-        IEnquiryRepository.cs
-        EnquiryRepository.cs
-        IEmailService.cs
-        EmailService.cs
-    /Startup
-        DependencyInjection.cs
-    FunctionHost.cs
+---
+
+## 🚀 Features
+
+- Durable, replay‑safe orchestrators
+- Clean separation of concerns (Triggers, Orchestrators, Activities, Services)
+- PostgreSQL persistence using Npgsql
+- Email delivery via Resend
+- Dependency Injection for all services
+- Local‑development‑friendly (automatic purge of old instances)
+- Fully typed workflow models
+
+---
+
+## 📁 Project Structure
+--
+
+## 🔄 Enquiry Workflow
+
+```mermaid
+flowchart TD
+
+A[HTTP Trigger: EnquiryHttpStart] --> B[Start Orchestrator]
+
+B --> C[Activity: SaveEnquiryToDatabase]
+C --> D[Activity: SendNewEnquiryToHydralux]
+D --> E[Activity: SendReceivedEnquiryToCustomer]
+
+E --> F[Return: OK]
+
+# 🧭 **Diagram of the Enquiry Workflow**
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant User
+    participant HttpStart
+    participant Orchestrator
+    participant DB as SaveEnquiryToDatabase
+    participant HydraluxEmail as SendNewEnquiryToHydralux
+    participant CustomerEmail as SendReceivedEnquiryToCustomer
+
+    User->>HttpStart: POST /api/Enquiry_HttpStart
+    HttpStart->>Orchestrator: Start new instance
+    Orchestrator->>DB: Save enquiry
+    DB-->>Orchestrator: Enquiry (with ID)
+    Orchestrator->>HydraluxEmail: Send internal notification
+    Orchestrator->>CustomerEmail: Send confirmation email
+    Orchestrator-->>HttpStart: OK
+    HttpStart-->>User: 202 Accepted + status URLs
