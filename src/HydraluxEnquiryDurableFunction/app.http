@@ -5,11 +5,11 @@
 @baseUrl={{hostname}}:{{port}}
 
 ###
-POST {{baseUrl}}/api/Function1_HttpStart
+POST {{baseUrl}}/api/HydraluxEnquiryStart
 content-type: application/json
 {
   "Name": "Richard Jones",
-  "Phone":"0437291575",
+  "Phone":"9999 999 999",
   "Email":"rjjones79@hotmail.com",
   "ServiceRequired":"Driveway Clean",
   "Message": "This a test message."
