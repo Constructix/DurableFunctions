@@ -41,7 +41,7 @@ D --> E[Activity: SendReceivedEnquiryToCustomer]
 E --> F[Return: OK]
 
 # 🧭 **Diagram of the Enquiry Workflow**
-
+``` 
 ```mermaid
 sequenceDiagram
     autonumber
@@ -60,3 +60,4 @@ sequenceDiagram
     Orchestrator->>CustomerEmail: Send confirmation email
     Orchestrator-->>HttpStart: OK
     HttpStart-->>User: 202 Accepted + status URLs
+```
